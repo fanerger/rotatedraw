@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html style="">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+  <title></title>
+  <link rel="stylesheet" href="./css/com-phone.css">
+  <script type="text/javascript" src="./js/com-phone.js"></script>
+  <script type="text/javascript" src="./js/jquery.js"></script>
+  <script type="text/javascript" src="./js/awardRotate.js"></script>
+  <style>
+  .fl{float: left;}
+  .fr{float: right;}
+  .luck-page{
+    width: 100%;
+    height: 10.17rem;
+    background: url(./img/luck_bg.png) no-repeat;
+    background-size: 100%;
+    padding-top: .3rem;
+    box-sizing: border-box;
+  }
+  .luck-page .top{
+    overflow: hidden;
+  }
+  .luck-page .choice{
+    padding-left: .2rem;
+    color: #912713;
+  }
+  .luck-page .rule{
+    line-height: .46rem;
+    width: 1.5rem;
+    color: #fff;
+    background: #fac849;
+    border-top-left-radius: .23rem;
+    border-bottom-left-radius: .23rem;
+    font-size: .24rem;
+    text-align: center;
+  }
+  .luck-page .container{
+    width: 5rem;
+    height: 5rem;
+    margin: .5rem auto 1.2rem;
+    position: relative;
+  }
+  .luck-page .rotate-img{
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .luck-page .pointer{
+    display: block;
+    width: 1.63rem;
+    height: 1.84rem;
+    position: absolute;
+    left: 1.68rem;
+    top: 1.4rem;
+  }
+  .luck-page .winner-big-wrap{
+    width: 5.5rem;
+    padding: .1rem;
+    background: rgba(255,255,255,0.5);
+    border-radius: .04rem;
+    margin: 0 auto;
+  }
+  .luck-page .winner-wrap{
+    height: 2.34rem;
+    border-radius: .04rem;
+    background: #fff;
+    padding-top: 0.06rem;
+  }
+  .luck-page .winner-img{
+    display: block;
+    width: 3.2rem;
+    height: .66rem;
+    margin: 0 auto;
+  }
+  .winner-ul{
+    width: 100%;
+    position: absolute;
+    top: 0;
+  }
+  .winner-ul li{
+    text-align: center;
+    line-height: .5rem;
+    color: #ff8400;
+    font-size: .2rem;
+  }
+  .w-lists{
+    height:1.5rem;
+    overflow: hidden;
+    position: relative;
+  }
+  /* .mask-wrap{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 6.4rem;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .mask-wrap .mask-content{
+    width: 4.5rem;
+    height: 3rem;
+    background: #fff;
+    border-radius: .1rem;
+  } */
+  </style>
+</head>
+<body>
+  <div class="luck-page">
+    <div class="top">
+      <div class="fl choice">您有0次抽奖机会</div>
+      <div class="fr rule">抽奖规则></div>
+    </div>
+    <div class="container">
+      <img src="./img/luck_turntable1.png" alt="" class="rotate-img" id="rotateCir">
+      <img src="./img/luck_pointer.png" alt="" class="pointer">
+    </div>
+    <div class="winner-big-wrap">
+      <div class="winner-wrap">
+        <img src="./img/luck_winner.png" alt="" class="winner-img">
+        <div class="w-lists">
+          <ul class="winner-ul">
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 弹窗 -->
+  <!-- <div class="mask-wrap">
+    <div class="mask-content">
+
+    </div>
+  </div> -->
+  <script type="text/javascript">
+  $(function (){
+    //底部的滚动消息
+    var wins=[
+      {userName:'张先生',createTime:'1分钟前',awardName:'10积分',telephone:'135****4554'},
+      {userName:'张先生',createTime:'2分钟前',awardName:'20积分',telephone:'135****4554'},
+      {userName:'张先生',createTime:'3分钟前',awardName:'30积分',telephone:'135****4554'},
+      {userName:'张先生',createTime:'4分钟前',awardName:'40积分',telephone:'135****4554'}
+    ];
+    if(wins.length>3){
+      for(var i=0;i<wins.length;i++){
+        var winnerEle='<li>恭喜用户 '+wins[i].telephone+'抽中了 '+wins[i].awardName+'</li>';
+        $('.winner-ul').append(winnerEle)
+      };
+      for(var i=0;i<3;i++){
+        var winnerEle='<li>恭喜用户 '+wins[i].telephone+'抽中了 '+wins[i].awardName+'</li>';
+        $('.winner-ul').append(winnerEle)
+      };
+      var h=.5;
+      var j=0;
+      setInterval(function(){
+        j++
+        var top=h*j
+        $('.winner-ul').animate({top:-top+'rem'}, 1000,'swing',function(){
+          if(top>=h*wins.length){
+            j=0;
+            $('.winner-ul').css('top','0')
+          }
+        })
+      },3000)
+    }else if(wins.length==0){
+      var winnerEle='<li>还没有人中奖哦~</li>';
+      $('.winner-ul').append(winnerEle)
+    }else{
+      for(var i=0;i<wins.length;i++){
+        var winnerEle='<li>恭喜用户 '+wins[i].telephone+'抽中了 '+wins[i].awardName+'</li>';
+        $('.winner-ul').append(winnerEle)
+      }
+    }
+    // 分割线
+    $.ajax({
+      url:'http://192.168.10.133/xxcust/account/member/lotteryConfig',
+      type:'get',
+      data: {signId: 'wx7813c734d14ca70d25f6d206ef3b25bd'},
+      success:function(res){
+        if(res.success===true){
+
+        }
+      }
+    })
+    var prizeLists;//奖品列表
+    var centerDeg;//偏移角度 刚好到中央，360/8/2==22.5
+    prizeLists=[{id:1,awardName:'飞机'},{id:2,awardName:'飞机'},{id:3,awardName:'飞机'},{id:4,awardName:'飞机'},{id:5,awardName:'飞机'},{id:6,awardName:'飞机'}]
+    centerDeg=180/6;
+
+    var rotateTimeOut = function (){
+      $('#rotateCir').rotate({
+        angle:0,
+        animateTo:2160,
+        duration:8000,
+        callback:function (){
+          alert('网络超时，请检查您的网络设置！');
+        }
+      });
+    };
+    var bRotate = false;//防止摇奖中点击
+    var rotateFn = function (awards, angles, txt){
+      bRotate = !bRotate;
+      $('#rotateCir').stopRotate();
+      $('#rotateCir').rotate({
+        angle:0,
+        animateTo:angles+1800+centerDeg,
+        duration:8000,
+        callback:function (){
+          // $('.alert-true').show()
+          // $('.prize').text(txt)
+          bRotate = !bRotate;
+        }
+      })
+    };
+    //点击抽奖
+    $('.pointer').click(function (){
+      if(bRotate)return;
+      var prizeId = 2;
+      rotateFn(prizeId, centerDeg*2*prizeId, prizeLists[prizeId-1].awardName);//rotateFn(奖品ID，偏移角度,奖品名称)
+    });
+  })
+  </script>
+</body>
+</html>
